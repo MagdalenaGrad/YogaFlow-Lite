@@ -1,0 +1,75 @@
+---
+description: TypeScript coding guidelines and best practices for YogaFlow Lite
+# Match all TS/TSX files except in node_modules
+globs: "*.{ts,tsx}"
+alwaysApply: true
+---
+
+### Guidelines for TypeScript
+
+#### Type Safety & Configuration
+
+- Enable **strict** mode in `tsconfig.json` (`strict: true`).
+- Use **noUncheckedIndexedAccess**, **exactOptionalPropertyTypes**, and **noImplicitOverride`** for better safety.
+- Do **not** use the `any` type; instead, use unknown, generics, or proper discriminated unions.
+- Prefer **interfaces** for object shapes; use **type** for unions, utility, or mapped types.
+- Always specify return types for public functions and React components.
+
+#### Project Conventions
+
+- Group imports by source: external packages, internal aliases (`@/`), then relative imports.
+- Use **ESM** syntax (import/export) everywhere.
+- File naming: `camelCase` for folders, `PascalCase` for React components, and `kebab-case` for other files.
+- Avoid default exports; favor named exports to improve discoverability and refactors.
+- One top-level declaration per file when practical.
+
+#### Error Handling
+
+- Use `Result` or `try/catch` utilities in `src/lib` for async flows instead of silent `catch` blocks.
+- Never swallow errors; log via a centralized logger.
+- Create custom error classes extending `Error` for domain-specific issues.
+
+#### Utility Libraries
+
+- Use **Zod** for schema validation and type inference.
+- Use **date-fns** for date manipulation (avoid Moment.js).
+- Use **lodash-es** selectively; tree-shake unused helpers.
+
+#### React & TSX
+
+- Components are `FC<Props>` with explicit prop interfaces.
+- Avoid union props like `variant?: "primary" | "secondary"`; instead use [class-variance-authority](https://github.com/joe-bell/cva) pattern (already installed).
+- Use hooks from `use` prefix and uphold [Rules of Hooks].
+
+#### Testing
+
+- Use **Vitest** (to be added) with `@testing-library/react`.
+- Types must compile in test environment (`ts-node` or `tsx`).
+
+#### ESLint & Prettier
+
+- Respect the existing ESLint config; no `// eslint-disable` unless justified.
+- Run `npm run lint:fix` before committing; Husky will enforce.
+- Prettier handles formatting; do not manually align types.
+
+#### Documentation & Comments
+
+- Use TSDoc for public functions (`/**` blocks).
+- Inline comments only when the code intent isn’t obvious.
+
+#### Example Skeleton
+
+```ts
+// src/lib/math/calcBMI.ts
+export interface BmiInput {
+  heightCm: number;
+  weightKg: number;
+}
+
+export function calcBMI({ heightCm, weightKg }: BmiInput): number {
+  const heightM = heightCm / 100;
+  return Number((weightKg / heightM ** 2).toFixed(2));
+}
+```
+
+> Follow these rules to keep the codebase consistent, safe, and maintainable.
