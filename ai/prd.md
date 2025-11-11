@@ -48,14 +48,23 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - Ability to change the order of poses within a sequence using "up/down" buttons
 - Ability to remove individual poses from a sequence
 
-### FR-4: Practice Mode
+### FR-4: AI Sequence Generation
+
+- Logged-in users can generate personalized yoga sequences using AI assistance
+- Users provide a simple text prompt describing their needs (e.g., "morning flow for beginners")
+- Optional parameters: difficulty level, desired duration, focus areas
+- AI suggests a complete sequence with pose selection and ordering
+- Generated sequences are previewed before saving (not automatically saved)
+- Rate limited to prevent abuse (5 generations per user per hour)
+
+### FR-5: Practice Mode
 
 - A minimalist, distraction-free interface for practicing based on a saved sequence
 - Displays one pose at a time, including the image, names, and description
 - Manual "Next" and "Back" navigation allowing for practice at one's own pace
 - A button to end the practice and return to the user dashboard
 
-### FR-5: Accessibility
+### FR-6: Accessibility
 
 - The application must meet basic accessibility standards (WCAG)
 - All images in the application must have alternative text (alt attribute)
@@ -69,6 +78,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - Pose library with predefined, permanently loaded content
 - Filtering by difficulty level and pose type
 - Creating, naming, saving, deleting, and reordering poses in sequences
+- AI-assisted sequence generation with simple text prompts
 - Manually controlled practice mode
 
 ### Features Excluded from MVP
@@ -199,7 +209,22 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - After clicking the button, a confirmation prompt appears to prevent accidental deletion
 - After confirmation, the sequence is permanently deleted from my account
 
-### US-013: Image Accessibility
+### US-013: Generating a Sequence with AI
+
+**Description:** As a logged-in user, I want to generate a personalized yoga sequence using AI, so I can quickly create a practice that matches my needs without manually selecting each pose.
+
+**Acceptance Criteria:**
+
+- There is a clearly visible "Generate with AI" button or option in the sequence creation interface
+- A simple form appears where I can enter a text prompt (e.g., "gentle morning flow for flexibility")
+- I can optionally specify difficulty level and desired duration
+- After submitting, the system generates a sequence and displays it for my review
+- The generated sequence shows pose names, images, and suggested order
+- I have the option to save the generated sequence to my account or discard it
+- I can edit the generated sequence (add/remove/reorder poses) before or after saving
+- If I exceed the rate limit (5 generations per hour), I receive a clear message explaining the limit
+
+### US-014: Image Accessibility
 
 **Description:** As a user relying on a screen reader, I want all pose images to have alternative text that describes what they depict.
 
@@ -221,3 +246,5 @@ The main goal of the MVP is to validate the hypothesis that users need and will 
 - **Average number of sequences created and saved per active user:** This will show how intensively users are engaging with the core feature of the product
 - **Number of completed sessions in Practice Mode:** This will indicate whether users are not only creating sequences but also actually using them for practice
 - **Guest-to-Registered-User Conversion Rate:** This will measure how effectively we encourage unauthenticated users to create an account
+- **AI Generation Usage Rate:** Percentage of users who use the AI generation feature at least once, and the ratio of AI-generated to manually-created sequences
+- **AI-Generated Sequence Save Rate:** Percentage of AI-generated sequences that users choose to save, indicating the quality and usefulness of AI suggestions
