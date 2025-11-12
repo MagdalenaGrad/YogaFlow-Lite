@@ -1,8 +1,6 @@
 ---
 description: TypeScript coding guidelines and best practices for YogaFlow Lite
-# Match all TS/TSX files except in node_modules
-globs: "*.{ts,tsx}"
-alwaysApply: true
+alwaysApply: false
 ---
 
 ### Guidelines for TypeScript

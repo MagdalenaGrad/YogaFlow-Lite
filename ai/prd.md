@@ -48,14 +48,23 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - Ability to change the order of poses within a sequence using "up/down" buttons
 - Ability to remove individual poses from a sequence
 
-### FR-4: Practice Mode
+### FR-4: AI Sequence Generation
+
+- Logged-in users can generate personalized yoga sequences using AI assistance
+- Users provide a simple text prompt describing their needs (e.g., "morning flow for beginners")
+- Optional parameters: difficulty level, desired duration, focus areas
+- AI suggests a complete sequence with pose selection and ordering
+- Generated sequences are previewed before saving (not automatically saved)
+- Rate limited to prevent abuse (5 generations per user per hour)
+
+### FR-5: Practice Mode
 
 - A minimalist, distraction-free interface for practicing based on a saved sequence
 - Displays one pose at a time, including the image, names, and description
 - Manual "Next" and "Back" navigation allowing for practice at one's own pace
 - A button to end the practice and return to the user dashboard
 
-### FR-5: Accessibility
+### FR-6: Accessibility
 
 - The application must meet basic accessibility standards (WCAG)
 - All images in the application must have alternative text (alt attribute)
@@ -69,6 +78,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - Pose library with predefined, permanently loaded content
 - Filtering by difficulty level and pose type
 - Creating, naming, saving, deleting, and reordering poses in sequences
+- AI-assisted sequence generation with simple text prompts
 - Manually controlled practice mode
 
 ### Features Excluded from MVP
@@ -112,17 +122,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - There is a clearly marked "Logout" button in the interface
 - After clicking the button, the user's session is terminated, and they are redirected to the homepage
 
-### US-004: Guest Access to Pose Library
-
-**Description:** As an unauthenticated user (guest), I want to be able to browse, search, and filter poses in the pose library.
-
-**Acceptance Criteria:**
-
-- A guest has full access to the pose library view
-- A guest can use the search and filter functionalities
-- When attempting to add a pose to a sequence (or any other action requiring login), the guest is prompted to log in or register
-
-### US-005: Viewing Pose Details
+### US-004: Viewing Pose Details
 
 **Description:** As a user, I want to be able to see detailed information about a selected pose.
 
@@ -131,7 +131,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - Clicking on a pose in the library opens a detailed view
 - The detailed view includes a large image, English name, Sanskrit name, and a description of how to perform it
 
-### US-006: Creating a New Sequence
+### US-005: Creating a New Sequence
 
 **Description:** As a logged-in user, I want to be able to create a new, empty sequence and give it a unique name.
 
@@ -141,7 +141,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - After clicking, a field appears to enter the sequence name (e.g., "Morning Energy")
 - After confirming the name, the new, empty sequence appears on my list of sequences
 
-### US-007: Adding a Pose to a Sequence
+### US-006: Adding a Pose to a Sequence
 
 **Description:** As a logged-in user browsing the pose library, I want to be able to add a selected pose to one of my sequences with a single click.
 
@@ -151,7 +151,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - After clicking the button, the user can choose which of their saved sequences to add the pose to
 - After adding the pose, the user receives visual confirmation (e.g., a short "Added" message)
 
-### US-008: Managing Poses within a Sequence
+### US-007: Managing Poses within a Sequence
 
 **Description:** As a logged-in user, I want to be able to reorder and remove poses within my saved sequence.
 
@@ -161,7 +161,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - Clicking an arrow moves the pose one position in that direction
 - Each pose on the list has a "Remove" button, which deletes it from the sequence
 
-### US-009: Starting Practice Mode
+### US-008: Starting Practice Mode
 
 **Description:** As a logged-in user, I want to be able to start a saved sequence in practice mode.
 
@@ -170,7 +170,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - On my list of sequences, each one has a "Start Practice" button
 - Clicking the button takes me to the practice mode interface, displaying the first pose from the sequence
 
-### US-010: Navigation in Practice Mode
+### US-009: Navigation in Practice Mode
 
 **Description:** As a user in practice mode, I want to be able to manually move to the next and previous pose.
 
@@ -180,7 +180,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - The "Next" button is disabled on the last pose, and the "Back" button is disabled on the first
 - The user can freely move through the sequence in both directions
 
-### US-011: Ending Practice Mode
+### US-010: Ending Practice Mode
 
 **Description:** As a user in practice mode, I want to be able to end the session at any time.
 
@@ -189,7 +189,7 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - There is an "End" button or an "X" icon on the practice screen
 - After clicking it, I am taken back to my user dashboard
 
-### US-012: Deleting an Entire Sequence
+### US-011: Deleting an Entire Sequence
 
 **Description:** As a logged-in user, I want to be able to delete an entire saved sequence.
 
@@ -198,6 +198,21 @@ Currently, there is a lack of an easily accessible, simple digital tool that all
 - On my list of sequences, each one has a "Delete" button
 - After clicking the button, a confirmation prompt appears to prevent accidental deletion
 - After confirmation, the sequence is permanently deleted from my account
+
+### US-012: Generating a Sequence with AI
+
+**Description:** As a logged-in user, I want to generate a personalized yoga sequence using AI, so I can quickly create a practice that matches my needs without manually selecting each pose.
+
+**Acceptance Criteria:**
+
+- There is a clearly visible "Generate with AI" button or option in the sequence creation interface
+- A simple form appears where I can enter a text prompt (e.g., "gentle morning flow for flexibility")
+- I can optionally specify difficulty level and desired duration
+- After submitting, the system generates a sequence and displays it for my review
+- The generated sequence shows pose names, images, and suggested order
+- I have the option to save the generated sequence to my account or discard it
+- I can edit the generated sequence (add/remove/reorder poses) before or after saving
+- If I exceed the rate limit (5 generations per hour), I receive a clear message explaining the limit
 
 ### US-013: Image Accessibility
 
@@ -220,4 +235,5 @@ The main goal of the MVP is to validate the hypothesis that users need and will 
 
 - **Average number of sequences created and saved per active user:** This will show how intensively users are engaging with the core feature of the product
 - **Number of completed sessions in Practice Mode:** This will indicate whether users are not only creating sequences but also actually using them for practice
-- **Guest-to-Registered-User Conversion Rate:** This will measure how effectively we encourage unauthenticated users to create an account
+- **AI Generation Usage Rate:** Percentage of users who use the AI generation feature at least once, and the ratio of AI-generated to manually-created sequences
+- **AI-Generated Sequence Save Rate:** Percentage of AI-generated sequences that users choose to save, indicating the quality and usefulness of AI suggestions

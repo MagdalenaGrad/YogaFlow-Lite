@@ -6,7 +6,7 @@ This document describes the PostgreSQL schema, indexes, and Row-Level Security (
 
 ## 1. Tables
 
-1) `users` (mirror of Supabase Auth users)
+1. `users` (mirror of Supabase Auth users)
 
 - `id uuid primary key` -- matches `auth.users.id` (not null)
 - `email text` -- optional local copy for convenience (nullable)
@@ -14,17 +14,17 @@ This document describes the PostgreSQL schema, indexes, and Row-Level Security (
 
 Notes: this table may be omitted if you always join to `auth.users`; included for clarity.
 
-2) `difficulties`
+2. `difficulties`
 
 - `id smallint primary key generated always as identity` -- small lookup id
 - `name text not null unique` -- e.g., 'beginner', 'intermediate'
 
-3) `pose_types`
+3. `pose_types`
 
 - `id smallint primary key generated always as identity`
 - `name text not null unique` -- e.g., 'standing', 'seated'
 
-4) `poses` (canonical pose records)
+4. `poses` (canonical pose records)
 
 - `id uuid primary key`
 - `name text not null`
@@ -42,7 +42,7 @@ Notes: this table may be omitted if you always join to `auth.users`; included fo
 
 Notes: `poses` contains the canonical, editable record. Historical snapshots are stored in `pose_versions`.
 
-5) `pose_versions` (immutable snapshots)
+5. `pose_versions` (immutable snapshots)
 
 - `id uuid primary key default gen_random_uuid()`
 - `pose_id uuid not null references poses(id) on delete cascade`
@@ -57,7 +57,7 @@ unique constraint: (`pose_id`, `version`)
 
 Rationale: store immutable snapshots so sequences referencing a pose keep correct historical content.
 
-6) `sequences`
+6. `sequences`
 
 - `id uuid primary key default gen_random_uuid()`
 - `user_id uuid not null` references `users(id)`
@@ -68,7 +68,7 @@ Rationale: store immutable snapshots so sequences referencing a pose keep correc
 
 unique constraint: (`user_id`, `name`)
 
-7) `sequence_poses` (associative table preserving order)
+7. `sequence_poses` (associative table preserving order)
 
 - `id uuid primary key default gen_random_uuid()`
 - `sequence_id uuid not null references sequences(id) on delete cascade`
@@ -78,11 +78,12 @@ unique constraint: (`user_id`, `name`)
 - `added_at timestamptz default now()`
 
 constraints:
+
 - unique (`sequence_id`, `position`)
 
 Notes: we use an `id` PK to allow duplicate poses in a sequence; uniqueness is enforced on (`sequence_id`, `position`).
 
-8) `practice_sessions`
+8. `practice_sessions`
 
 - `id uuid primary key default gen_random_uuid()`
 - `user_id uuid not null references users(id)`
@@ -97,13 +98,13 @@ optional unique constraint to enforce idempotency: (`user_id`, `sequence_id`, `s
 
 ## 2. Relationships (cardinality)
 
-- `users` 1 --- * `sequences` (one user can have many sequences)
-- `sequences` 1 --- * `sequence_poses` (one sequence has many pose entries)
-- `poses` 1 --- * `pose_versions` (one pose can have many versions)
-- `poses` 1 --- * `sequence_poses` (canonical pose referenced in sequence entries)
-- `pose_versions` 1 --- * `sequence_poses` (sequence entries reference a specific pose version)
-- `users` 1 --- * `practice_sessions` (one user can have many practice sessions)
-- `sequences` 1 --- * `practice_sessions` (one sequence can have many sessions)
+- `users` 1 --- \* `sequences` (one user can have many sequences)
+- `sequences` 1 --- \* `sequence_poses` (one sequence has many pose entries)
+- `poses` 1 --- \* `pose_versions` (one pose can have many versions)
+- `poses` 1 --- \* `sequence_poses` (canonical pose referenced in sequence entries)
+- `pose_versions` 1 --- \* `sequence_poses` (sequence entries reference a specific pose version)
+- `users` 1 --- \* `practice_sessions` (one user can have many practice sessions)
+- `sequences` 1 --- \* `practice_sessions` (one sequence can have many sessions)
 
 Many-to-many is modeled via `sequence_poses` (sequence ↔ pose with ordering)
 
@@ -120,6 +121,7 @@ Many-to-many is modeled via `sequence_poses` (sequence ↔ pose with ordering)
 - `practice_sessions`: `CREATE INDEX idx_practice_user_started ON practice_sessions(user_id, started_at);`
 
 Notes:
+
 - Use `gin` on the `tsv` column to accelerate full-text search across `name`, `sanskrit_name`, and `description`.
 - Keep indexes minimal for MVP; add composite indexes later based on slow queries.
 
@@ -128,6 +130,7 @@ Notes:
 ## 4. PostgreSQL / Supabase RLS Policies (examples)
 
 -- Enable RLS on user-protected tables
+
 ```sql
 alter table sequences enable row level security;
 alter table sequence_poses enable row level security;
@@ -136,6 +139,7 @@ alter table pose_versions enable row level security;
 ```
 
 -- sequences: allow users to select/insert/update/delete only their own sequences
+
 ```sql
 create policy "select_own_sequences" on sequences
   for select
@@ -156,6 +160,7 @@ create policy "delete_own_sequences" on sequences
 ```
 
 -- sequence_poses: allow access if the parent sequence belongs to the user
+
 ```sql
 create policy "select_sequence_poses_if_owner" on sequence_poses
   for select
@@ -186,6 +191,7 @@ create policy "delete_sequence_pose_if_owner" on sequence_poses
 ```
 
 -- practice_sessions: user can only read/insert their own sessions
+
 ```sql
 create policy "select_own_practice_sessions" on practice_sessions
   for select
@@ -206,6 +212,7 @@ create policy "delete_own_practice_sessions" on practice_sessions
 ```
 
 -- pose_versions: read access only to authenticated users for MVP
+
 ```sql
 create policy "select_pose_versions_auth" on pose_versions
   for select
@@ -217,6 +224,7 @@ create policy "insert_pose_versions_admin_only" on pose_versions
 ```
 
 Notes on admin/service roles:
+
 - Supabase `service_role` bypasses RLS when used server-side; for role-based policies in the database, a common pattern is to check a JWT claim like `jwt.claims.role = 'admin'` to allow admin actions. Adjust the exact check to match your auth token claims.
 
 ---
@@ -269,5 +277,3 @@ alter table poses add constraint fk_current_version foreign key (current_version
 ---
 
 End of plan.
-
-
